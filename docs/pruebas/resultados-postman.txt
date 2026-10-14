@@ -1,0 +1,201 @@
+(node:19628) [DEP0176] DeprecationWarning: fs.F_OK is deprecated, use fs.constants.F_OK instead
+(Use `node --trace-deprecation ...` to show where the warning was created)
+newman
+
+API - Biblioteca
+
+□ Pruebas principales
+└ 01 Crear libro
+  POST http://127.0.0.1:18081/api/libros [201 Created, 316B, 160ms]
+  √  HTTP 201
+  √  Un ejemplar disponible
+
+└ 02 Crear usuario
+  POST http://127.0.0.1:18081/api/usuarios [201 Created, 418B, 98ms]
+  √  HTTP 201
+  √  La contraseña no aparece en la respuesta
+
+└ 03 Registrar préstamo
+  POST http://127.0.0.1:18081/api/prestamos [201 Created, 644B, 29ms]
+  √  HTTP 201
+  √  Préstamo activo sin fecha de devolución
+  √  Fecha de préstamo registrada
+
+└ 04 Consultar libros
+  GET http://127.0.0.1:18081/api/libros [200 OK, 306B, 21ms]
+  √  HTTP 200
+  √  El libro prestado tiene cero disponibles
+
+└ 05 Consultar préstamos
+  GET http://127.0.0.1:18081/api/prestamos [200 OK, 634B, 14ms]
+  √  HTTP 200
+
+└ 06 Rechazar préstamo duplicado
+  POST http://127.0.0.1:18081/api/prestamos [409 Conflict, 292B, 12ms]
+  √  HTTP 409
+  √  Mensaje de préstamo duplicado
+
+└ 07 Devolver libro
+  POST http://127.0.0.1:18081/api/prestamos/1/devolver [200 OK, 640B, 24ms]
+  √  HTTP 200
+  √  Devolución con fecha registrada
+
+└ 08 Consultar disponibilidad después de devolver
+  GET http://127.0.0.1:18081/api/libros/9789514314353 [200 OK, 304B, 16ms]
+  √  HTTP 200
+  √  El ejemplar vuelve a estar disponible
+
+□ Pruebas adicionales
+└ Consultar usuarios
+  GET http://127.0.0.1:18081/api/usuarios [200 OK, 407B, 8ms]
+  √  HTTP 200
+  √  No se muestran contraseñas
+
+└ Consultar usuario por identificador
+  GET http://127.0.0.1:18081/api/usuarios/1 [200 OK, 405B, 9ms]
+  √  HTTP 200
+
+└ Consultar préstamos del usuario
+  GET http://127.0.0.1:18081/api/prestamos/usuario/1 [200 OK, 642B, 15ms]
+  √  HTTP 200
+
+└ Consultar préstamo por identificador
+  GET http://127.0.0.1:18081/api/prestamos/1 [200 OK, 640B, 14ms]
+  √  HTTP 200
+
+└ Rechazar correo duplicado
+  POST http://127.0.0.1:18081/api/usuarios [409 Conflict, 268B, 9ms]
+  √  HTTP 409
+
+└ Rechazar ISBN duplicado
+  POST http://127.0.0.1:18081/api/libros [409 Conflict, 266B, 10ms]
+  √  HTTP 409
+
+└ Rechazar libro sin título
+  POST http://127.0.0.1:18081/api/libros [400 Bad Request, 254B, 25ms]
+  √  HTTP 400
+
+└ Rechazar usuario sin contraseña
+  POST http://127.0.0.1:18081/api/usuarios [400 Bad Request, 242B, 8ms]
+  √  HTTP 400
+
+└ Rechazar fecha de nacimiento futura
+  POST http://127.0.0.1:18081/api/usuarios [400 Bad Request, 265B, 5ms]
+  √  HTTP 400
+
+└ Rechazar año de publicación futuro
+  POST http://127.0.0.1:18081/api/libros [400 Bad Request, 256B, 9ms]
+  √  HTTP 400
+
+└ Rechazar préstamo sin usuario
+  POST http://127.0.0.1:18081/api/prestamos [400 Bad Request, 238B, 7ms]
+  √  HTTP 400
+
+└ Rechazar libro inexistente
+  POST http://127.0.0.1:18081/api/prestamos [404 Not Found, 258B, 9ms]
+  √  HTTP 404
+
+└ Crear préstamo para validaciones
+  POST http://127.0.0.1:18081/api/prestamos [201 Created, 644B, 16ms]
+  √  HTTP 201
+
+└ Crear segundo usuario
+  POST http://127.0.0.1:18081/api/usuarios [201 Created, 420B, 61ms]
+  √  HTTP 201
+
+└ Rechazar préstamo sin ejemplares disponibles
+  POST http://127.0.0.1:18081/api/prestamos [409 Conflict, 268B, 9ms]
+  √  HTTP 409
+  √  Mensaje de falta de ejemplares
+
+└ Rechazar reducción de ejemplares prestados
+  PUT http://127.0.0.1:18081/api/libros/9789514314353 [409 Conflict, 295B, 7ms]
+  √  HTTP 409
+
+└ Rechazar eliminación de préstamo activo
+  DELETE http://127.0.0.1:18081/api/prestamos/2 [409 Conflict, 270B, 6ms]
+  √  HTTP 409
+
+└ Rechazar eliminación de libro con préstamos
+  DELETE http://127.0.0.1:18081/api/libros/9789514314353 [409 Conflict, 276B, 14ms]
+  √  HTTP 409
+
+└ Rechazar eliminación de usuario con préstamos
+  DELETE http://127.0.0.1:18081/api/usuarios/1 [409 Conflict, 278B, 9ms]
+  √  HTTP 409
+
+└ Devolver préstamo de validación
+  POST http://127.0.0.1:18081/api/prestamos/2/devolver [200 OK, 640B, 13ms]
+  √  HTTP 200
+
+└ Rechazar segunda devolución
+  POST http://127.0.0.1:18081/api/prestamos/2/devolver [409 Conflict, 267B, 12ms]
+  √  HTTP 409
+
+└ Inactivar usuario
+  PUT http://127.0.0.1:18081/api/usuarios/1 [200 OK, 407B, 14ms]
+  √  HTTP 200
+
+└ Rechazar préstamo a usuario inactivo
+  POST http://127.0.0.1:18081/api/prestamos [409 Conflict, 265B, 12ms]
+  √  HTTP 409
+
+└ Reactivar usuario
+  PUT http://127.0.0.1:18081/api/usuarios/1 [200 OK, 405B, 12ms]
+  √  HTTP 200
+
+└ Actualizar libro
+  PUT http://127.0.0.1:18081/api/libros/9789514314353 [200 OK, 316B, 14ms]
+  √  HTTP 200
+
+└ Consultar préstamos activos
+  GET http://127.0.0.1:18081/api/prestamos/activos [200 OK, 157B, 9ms]
+  √  HTTP 200
+
+└ Eliminar préstamo devuelto de validación
+  DELETE http://127.0.0.1:18081/api/prestamos/2 [204 No Content, 112B, 17ms]
+  √  HTTP 204
+
+└ Confirmar eliminación de préstamo
+  GET http://127.0.0.1:18081/api/prestamos/2 [404 Not Found, 262B, 6ms]
+  √  HTTP 404
+
+└ Eliminar usuario sin préstamos
+  DELETE http://127.0.0.1:18081/api/usuarios/2 [204 No Content, 112B, 12ms]
+  √  HTTP 204
+
+└ Confirmar eliminación de usuario
+  GET http://127.0.0.1:18081/api/usuarios/2 [404 Not Found, 260B, 6ms]
+  √  HTTP 404
+
+└ Crear libro temporal
+  POST http://127.0.0.1:18081/api/libros [201 Created, 316B, 13ms]
+  √  HTTP 201
+
+└ Eliminar libro sin préstamos
+  DELETE http://127.0.0.1:18081/api/libros/9799514314352 [204 No Content, 112B, 14ms]
+  √  HTTP 204
+
+└ Confirmar eliminación de libro
+  GET http://127.0.0.1:18081/api/libros/9799514314352 [404 Not Found, 258B, 5ms]
+  √  HTTP 404
+
+┌─────────────────────────┬───────────────────┬──────────────────┐
+│                         │          executed │           failed │
+├─────────────────────────┼───────────────────┼──────────────────┤
+│              iterations │                 1 │                0 │
+├─────────────────────────┼───────────────────┼──────────────────┤
+│                requests │                41 │                0 │
+├─────────────────────────┼───────────────────┼──────────────────┤
+│            test-scripts │                41 │                0 │
+├─────────────────────────┼───────────────────┼──────────────────┤
+│      prerequest-scripts │                41 │                0 │
+├─────────────────────────┼───────────────────┼──────────────────┤
+│              assertions │                51 │                0 │
+├─────────────────────────┴───────────────────┴──────────────────┤
+│ total run duration: 4.2s                                       │
+├────────────────────────────────────────────────────────────────┤
+│ total data received: 7.54kB (approx)                           │
+├────────────────────────────────────────────────────────────────┤
+│ average response time: 19ms [min: 5ms, max: 160ms, s.d.: 27ms] │
+└────────────────────────────────────────────────────────────────┘
